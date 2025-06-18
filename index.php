@@ -691,6 +691,9 @@
 
             // do some AJAX stuff
             queryURL = "https://realjourneytime.azurewebsites.net/index.php?method=AllStops";
+            
+            queryURL = "https://localhost:7245/api/AllStops";
+
             console.log(queryURL);
             var xhr = new XMLHttpRequest();
             xhr.open('GET', queryURL);
@@ -768,6 +771,9 @@
 
             // do some AJAX stuff
             queryURL = "https://realjourneytime.azurewebsites.net/index.php?method=StopsFromStop&fromCode=" + fromStop;
+
+            queryURL = "https://localhost:7245/api/StopsFromStop?fromCode=" + fromStop;
+
             console.log("fromStop " + fromStop);
             document.getElementById('stopsFromStop').innerHTML = queryURL;
             console.log(queryURL);
@@ -1059,6 +1065,9 @@
                 updateUrlState(queryString)
 
                 queryURL = "https://realjourneytime.azurewebsites.net/index.php?method=Journeys&" + queryString;
+
+                queryURL = "https://localhost:7245/api/Journeys?" + queryString;
+
                 console.log(queryURL);
                 document.getElementById("queryURL").innerHTML = queryURL;
 
@@ -1187,7 +1196,11 @@
 
         function getIntermediateStops() {
 
-            var url = "https://realjourneytime.azurewebsites.net/index.php?method=IntermediateStops&fromCode=" + fromCode + "&toCode=" + toCode;
+            var url = "https://realjourneytime.azurewebsites.net/index.php?method=IntermediateStops&fromCode=" + fromCode + "&toCode=" + toCode;           
+            
+            url = "https://localhost:7245/api/IntermediateStops?fromCode=" + fromCode + "&toCode=" + toCode;
+
+
             console.log(url);
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url);
