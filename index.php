@@ -5,7 +5,7 @@
     <meta content="en-gb" http-equiv="Content-Language" />
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
     <meta id="viewportid" name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="js/leaflet.css" />
+    <link rel="stylesheet" href="css/leaflet.css" />
     <script src="js/leaflet.js"></script>
     <title>LineTracker</title>
     <link href="css/pikaday.css" rel="stylesheet">
