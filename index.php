@@ -1286,11 +1286,9 @@
             };
 
             for (var i = 0; i < intermediateStops.length; i++) {
-                console.log(intermediateStops[i]);
                 var stopMarker = routeStops.filter(function(routeStop) {
                     return routeStop.NaPTANID == intermediateStops[i];
                 });
-                console.log("Match " + stopMarker.NaPTANID);
                 if (stopMarker != undefined) {
                     var stopCoords = stopMarker[0].getLatLng();
                 }
