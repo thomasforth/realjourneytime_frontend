@@ -731,11 +731,15 @@
             fromStops = [];
             toStops = [];
 
-            if (leafletMap.hasLayer(fromToLine)) {
+            if (fromToLine && leafletMap.hasLayer(fromToLine)) {
                 leafletMap.removeLayer(fromToLine);
             };
-            leafletMap.removeLayer(fromStopsFeatureGroup);
-            leafletMap.removeLayer(toStopsFeatureGroup);
+            if (fromStopsFeatureGroup && leafletMap.hasLayer(fromStopsFeatureGroup)) {
+                leafletMap.removeLayer(fromStopsFeatureGroup);
+            };
+            if (toStopsFeatureGroup && leafletMap.hasLayer(toStopsFeatureGroup)) {
+                leafletMap.removeLayer(toStopsFeatureGroup);
+            };
 
             loadBusStops();
 
@@ -806,7 +810,9 @@
         var routeStops;
 
         function fromStopClick(e) {
-            leafletMap.removeLayer(fromStopsFeatureGroup);
+            if (fromStopsFeatureGroup && leafletMap.hasLayer(fromStopsFeatureGroup)) {
+                leafletMap.removeLayer(fromStopsFeatureGroup);
+            }
             fromCode = e.sourceTarget.NaPTANID;
             var fromVehicleType = e.sourceTarget.vehicleType;
             fromLatLng = e.sourceTarget.getLatLng();
@@ -1216,7 +1222,7 @@
 
         // Adds a line between the two stops of interest
         function drawStraightLine() {
-            if (leafletMap.hasLayer(fromToLine)) {
+            if (fromToLine && leafletMap.hasLayer(fromToLine)) {
                 leafletMap.removeLayer(fromToLine);
             };
             var lineElement = L.polyline([fromLatLng, toLatLng], {
@@ -1275,7 +1281,7 @@
 
         function drawFromToLine(intermediateStops) {
             lineCoordinates = [];
-            if (leafletMap.hasLayer(fromToLine)) {
+            if (fromToLine && leafletMap.hasLayer(fromToLine)) {
                 leafletMap.removeLayer(fromToLine);
             };
 
