@@ -642,6 +642,8 @@
 
         function onYearSelectChange(element) {
             year = element.value;
+            startPicker.setDate(`${year}-06-01`);
+            endPicker.setDate(`${year}-06-01`);
             resetMap();
             element.blur();
         }
