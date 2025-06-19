@@ -361,6 +361,10 @@
             margin: 1em;
         }
 
+        .intro__paragraph--center {
+            text-align: center;
+        }
+        
         .intro__link {
             color: inherit;
             text-decoration: underline;
@@ -410,6 +414,7 @@
         <h1>Real Journey Time</h1>
         <div class="intro">
             <p id="subhead" class="intro__paragraph">Using the Real Journey Time API to explore bus journey times in The West Midlands. Data collection for this project ended in June 2025. Bus tracking using <a class="intro__link" href="https://www.gov.uk/government/collections/bus-open-data-service">BODS</a> works better. This site now runs in archive mode on a smaller server and raw data can be downloaded from <a class="intro__link" href="https://datalibrary.uk/transport/">datalibrary.uk/transport</a>.</p>
+           
             <div class="year-pick">
                 <label for="yearSelect" class="year-pick__label">Select a year:</label>
                 <select id="yearSelect" class="year-pick__select" onchange="onYearSelectChange(this)" required>
@@ -417,13 +422,16 @@
                     <?php
                     $year = 2018;
                     $endYear = 2025;
+                    $defaultYear = 2023;
                     while ($year <= $endYear) {
-                        echo "<option class='year-pick__option' value='$year'>$year</option>";
+                        $disabledAttr = ($year !== $defaultYear) ? 'disabled' : '';
+                        echo "<option class='year-pick__option' value='$year' $disabledAttr>$year</option>";
                         $year++;
                     }
                     ?>
                 </select>
             </div>
+            <p class="intro__paragraph intro__paragraph--center">&#9888; Please note, currently only 2023 data is available.</p>
         </div>
         <div class="flex-grid">
             <div class="col">
