@@ -129,10 +129,6 @@
             padding: 10px;
         }
 
-        #subhead {
-            text-align: center;
-        }
-
         .code {
             font-family: monospace;
             text-align: left;
@@ -355,6 +351,42 @@
             color: white;
         }
 
+        .intro {
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .intro__paragraph {
+            margin: 1em;
+        }
+
+        .intro__link {
+            color: inherit;
+            text-decoration: underline;
+        }
+
+        .year-pick {
+            margin: 1em;
+            text-align: center;
+        }
+
+        .year-pick__label {
+            font-weight: bold;
+        }
+
+        .year-pick__select:invalid {
+            color: grey;
+        }
+
+        .year-pick__option {
+            color: black;
+        }
+
+        .year-pick__option--disabled {
+            color: grey !important;
+        }
+
         @media screen and (max-width: 900px) {
             .flex-grid {
                 flex-direction: column;
@@ -376,7 +408,23 @@
 
     <div id="contentWrapper">
         <h1>Real Journey Time</h1>
-        <p id="subhead">Using the Real Journey Time API to explore bus journey times in The West Midlands.</p>
+        <div class="intro">
+            <p id="subhead" class="intro__paragraph">Using the Real Journey Time API to explore bus journey times in The West Midlands. Data collection for this project ended in June 2025. Bus tracking using <a class="intro__link" href="https://www.gov.uk/government/collections/bus-open-data-service">BODS</a> works better. This site now runs in archive mode on a smaller server and raw data can be downloaded from <a class="intro__link" href="https://datalibrary.uk/transport/">datalibrary.uk/transport</a>.</p>
+            <div class="year-pick">
+                <label for="yearSelect" class="year-pick__label">Select a year:</label>
+                <select id="yearSelect" class="year-pick__select" required>
+                    <option class="year-pick__option year-pick__option--disabled" value="" disabled selected hidden>Pick one</option>
+                    <?php
+                    $year = 2018;
+                    $endYear = 2025;
+                    while ($year <= $endYear) {
+                        echo "<option class='year-pick__option' value='$year'>$year</option>";
+                        $year++;
+                    }
+                    ?>
+                </select>
+            </div>
+        </div>
         <div class="flex-grid">
             <div class="col">
                 <h3 id="pickStopHeading">
@@ -691,7 +739,7 @@
 
             // do some AJAX stuff
             queryURL = "https://realjourneytime.azurewebsites.net/index.php?method=AllStops";
-            
+
             queryURL = "https://localhost:7245/api/AllStops";
 
             console.log(queryURL);
@@ -1196,8 +1244,8 @@
 
         function getIntermediateStops() {
 
-            var url = "https://realjourneytime.azurewebsites.net/index.php?method=IntermediateStops&fromCode=" + fromCode + "&toCode=" + toCode;           
-            
+            var url = "https://realjourneytime.azurewebsites.net/index.php?method=IntermediateStops&fromCode=" + fromCode + "&toCode=" + toCode;
+
             url = "https://localhost:7245/api/IntermediateStops?fromCode=" + fromCode + "&toCode=" + toCode;
 
 
