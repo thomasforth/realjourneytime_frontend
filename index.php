@@ -751,9 +751,7 @@
         function loadBusStops() {
             spinner1.style.visibility = "visible";
 
-            queryURL = `https://realjourneytime.azurewebsites.net/index.php?method=AllStops&year=${year}`;
-
-            queryURL = `https://localhost:7245/api/AllStops?year=${year}`;
+            queryURL = `https://realjourneytime.azurewebsites.net/api/AllStops?year=${year}`;
 
             console.log(queryURL);
             var xhr = new XMLHttpRequest();
@@ -832,9 +830,7 @@
         function getReachableStops(fromStop) {
             spinner1.style.visibility = "visible";
 
-            queryURL = `https://realjourneytime.azurewebsites.net/index.php?method=StopsFromStop&fromCode=${fromStop}&year=${year}`;
-
-            queryURL = `https://localhost:7245/api/StopsFromStop?fromCode=${fromStop}&year=${year}`;
+            queryURL = `https://realjourneytime.azurewebsites.net/api/StopsFromStop?fromCode=${fromStop}&year=${year}`;
 
             console.log("fromStop " + fromStop);
             document.getElementById('stopsFromStop').innerHTML = queryURL;
@@ -1125,9 +1121,7 @@
                 var queryString = "year=" + year + "&fromCode=" + fromCode + "&toCode=" + toCode + "&dateString=" + selectedDate + serviceQuery;
                 updateUrlState(queryString)
 
-                queryURL = "https://realjourneytime.azurewebsites.net/index.php?method=Journeys&" + queryString;
-
-                queryURL = "https://localhost:7245/api/Journeys?" + queryString;
+                queryURL = "https://realjourneytime.azurewebsites.net/api/Journeys?" + queryString;
 
                 console.log(queryURL);
                 document.getElementById("queryURL").innerHTML = queryURL;
@@ -1257,10 +1251,7 @@
 
         function getIntermediateStops() {
 
-            var url = "https://realjourneytime.azurewebsites.net/index.php?method=IntermediateStops&fromCode=" + fromCode + "&toCode=" + toCode + "&year=" + year;
-
-            url = "https://localhost:7245/api/IntermediateStops?fromCode=" + fromCode + "&toCode=" + toCode + "&year=" + year;
-
+            var url = "https://realjourneytime.azurewebsites.net/api/IntermediateStops?fromCode=" + fromCode + "&toCode=" + toCode + "&year=" + year;
 
             console.log(url);
             var xhr = new XMLHttpRequest();
