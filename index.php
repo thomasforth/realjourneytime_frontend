@@ -633,11 +633,18 @@
 
             createMap();
             checkUrlState();
-
+            setDefaultYear();
+            
             google.charts.load('current', {
                 'packages': ['timeline', 'corechart', 'bar']
             });
 
+        }
+
+        function setDefaultYear() {
+            const defaultYear = 2023;
+            document.getElementById("yearSelect").value = defaultYear;
+            onYearSelectChange(document.getElementById("yearSelect"));
         }
 
         function onYearSelectChange(element) {
