@@ -412,7 +412,7 @@
             <p id="subhead" class="intro__paragraph">Using the Real Journey Time API to explore bus journey times in The West Midlands. Data collection for this project ended in June 2025. Bus tracking using <a class="intro__link" href="https://www.gov.uk/government/collections/bus-open-data-service">BODS</a> works better. This site now runs in archive mode on a smaller server and raw data can be downloaded from <a class="intro__link" href="https://datalibrary.uk/transport/">datalibrary.uk/transport</a>.</p>
             <div class="year-pick">
                 <label for="yearSelect" class="year-pick__label">Select a year:</label>
-                <select id="yearSelect" class="year-pick__select" required>
+                <select id="yearSelect" class="year-pick__select" onchange="onYearSelectChange(this)" required>
                     <option class="year-pick__option year-pick__option--disabled" value="" disabled selected hidden>Pick one</option>
                     <?php
                     $year = 2018;
@@ -626,6 +626,8 @@
         var StopsOfInterest;
         var leafletMap;
 
+        var year;
+
         function init() {
             createDatePicker();
 
@@ -636,7 +638,12 @@
                 'packages': ['timeline', 'corechart', 'bar']
             });
 
-            loadBusStops();
+        }
+
+        function onYearSelectChange(element) {
+            year = element.value;
+            resetMap();
+            element.blur();
         }
 
         var startingOptions;
@@ -731,16 +738,16 @@
             leafletMap.removeLayer(toStopsFeatureGroup);
 
             loadBusStops();
+
         }
         var allall;
 
         function loadBusStops() {
             spinner1.style.visibility = "visible";
 
-            // do some AJAX stuff
-            queryURL = "https://realjourneytime.azurewebsites.net/index.php?method=AllStops";
+            queryURL = `https://realjourneytime.azurewebsites.net/index.php?method=AllStops&year=${year}`;
 
-            queryURL = "https://localhost:7245/api/AllStops";
+            queryURL = `https://localhost:7245/api/AllStops?year=${year}`;
 
             console.log(queryURL);
             var xhr = new XMLHttpRequest();
@@ -817,10 +824,9 @@
         function getReachableStops(fromStop) {
             spinner1.style.visibility = "visible";
 
-            // do some AJAX stuff
-            queryURL = "https://realjourneytime.azurewebsites.net/index.php?method=StopsFromStop&fromCode=" + fromStop;
+            queryURL = `https://realjourneytime.azurewebsites.net/index.php?method=StopsFromStop&fromCode=${fromStop}&year=${year}`;
 
-            queryURL = "https://localhost:7245/api/StopsFromStop?fromCode=" + fromStop;
+            queryURL = `https://localhost:7245/api/StopsFromStop?fromCode=${fromStop}&year=${year}`;
 
             console.log("fromStop " + fromStop);
             document.getElementById('stopsFromStop').innerHTML = queryURL;
@@ -1098,7 +1104,6 @@
         function getRealJourneyTimes(selectedDate, selectedService) {
             spinner4text.innerHTML = "Loading may take up to a minute...";
 
-            // do some AJAX stuff
             if (fromCode != null) {
                 // clear previous charts and start a loading spinner
                 document.getElementById("charts").style.visibility = "hidden";
@@ -1109,7 +1114,7 @@
                 if (selectedService != undefined && selectedService != "All services") {
                     serviceQuery = "&service=" + selectedService;
                 }
-                var queryString = "fromCode=" + fromCode + "&toCode=" + toCode + "&dateString=" + selectedDate + serviceQuery;
+                var queryString = "year=" + year + "&fromCode=" + fromCode + "&toCode=" + toCode + "&dateString=" + selectedDate + serviceQuery;
                 updateUrlState(queryString)
 
                 queryURL = "https://realjourneytime.azurewebsites.net/index.php?method=Journeys&" + queryString;
@@ -1244,9 +1249,9 @@
 
         function getIntermediateStops() {
 
-            var url = "https://realjourneytime.azurewebsites.net/index.php?method=IntermediateStops&fromCode=" + fromCode + "&toCode=" + toCode;
+            var url = "https://realjourneytime.azurewebsites.net/index.php?method=IntermediateStops&fromCode=" + fromCode + "&toCode=" + toCode + "&year=" + year;
 
-            url = "https://localhost:7245/api/IntermediateStops?fromCode=" + fromCode + "&toCode=" + toCode;
+            url = "https://localhost:7245/api/IntermediateStops?fromCode=" + fromCode + "&toCode=" + toCode + "&year=" + year;
 
 
             console.log(url);
