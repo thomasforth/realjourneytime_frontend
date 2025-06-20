@@ -446,10 +446,6 @@
                         <label for="start">Select date:</label>
                         <input type="text" id="startDateInput">
                     </div>
-                    <div class="dateRangeElement" style="display: none;">
-                        <label for="end">End date:</label>
-                        <input type="text" id="endDateInput">
-                    </div>
                     <br>
                     <div class="dateRangeElement">
                         <div id="specialDateSelectionTitle">Select special dates:</div>
@@ -501,10 +497,6 @@
                             <option value="30">30</option>
                             <option value="45">45</option>
                         </select>
-                        <!-- <select onchange="timeChanged(this)" id="startAmPm" class="timeSelect">
-                            <option value="AM" selected>AM</option>
-                            <option value="PM">PM</option>
-                        </select>-->
                     </div>
                     <div class="timeSelectionHolder">
                         <div class="timeSelectionLabel">End time:</div>
@@ -542,10 +534,6 @@
                             <option value="30" disabled>30</option>
                             <option value="45" disabled>45</option>
                         </select>
-                        <!--  <select onchange="timeChanged(this)" id="endAmPm" class="timeSelect">
-                            <option value="AM">AM</option>
-                            <option value="PM" selected>PM</option>
-                        </select>-->
                     </div>
                     <div id="timeWarningMessage"></div>
                     <p>There's data from about the 26th of March.</p>
@@ -658,7 +646,6 @@
         function onYearSelectChange(element) {
             year = element.value;
             startPicker.setDate(`${year}-06-01`);
-            endPicker.setDate(`${year}-06-01`);
             resetMap();
             element.blur();
         }
@@ -980,10 +967,7 @@
         }
 
         var startPicker;
-        var endPicker;
-
         var startDate;
-        var endDate;
 
         function createDatePicker() {
             startPicker = new Pikaday({
@@ -995,18 +979,8 @@
                     updateStartDate();
                 }
             });
-            endPicker = new Pikaday({
-                field: document.getElementById('endDateInput'),
-                format: 'ddd MMMM Do YYYY [▼]',
-
-                onSelect: function() {
-                    endDate = this.getDate();
-                    updateEndDate();
-                }
-            });
 
             startPicker.setDate(moment().toDate());
-            endPicker.setDate(moment().toDate());
 
             updateStartDate();
         }
@@ -1075,27 +1049,11 @@
         function updateStartDate() {
             specialDateSelection.value = "null";
             startPicker.setStartRange(startDate);
-            endPicker.setStartRange(startDate);
-            endPicker.setMinDate(startDate);
-            if (endDateInput.value.indexOf("Pick date") > -1) {
-                endPicker.setDate(startDate);
-            }
             if (journeyTimeData != undefined) {
                 getRealJourneyTimes(startPicker.getMoment().format('YYYY-MM-DD'));
             }
 
         }
-
-        function updateEndDate() {
-            specialDateSelection.value = "null";
-            startPicker.setEndRange(endDate);
-            startPicker.setMaxDate(endDate);
-            endPicker.setEndRange(endDate);
-            if (startDateInput.value.indexOf("Pick date") > -1) {
-                startPicker.setDate(endDate);
-            }
-        }
-
 
         function checkDateInput() {
             if (specialDateSelection.value == "null") {
@@ -1115,7 +1073,6 @@
             if (specialDateSelection.value != "null") {
                 // Reset date picker element
                 startDateInput.value = "Pick date... ▼";
-                endDateInput.value = "Pick date... ▼";
                 getRealJourneyTimes(specialDateSelection.value);
             }
         }
