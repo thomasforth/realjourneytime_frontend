@@ -460,84 +460,6 @@
                         </select>
                     </div>
                 </div>
-                <div id="timeSelectionWrapper" class="controls">
-                    <div class="timeSelectionHolder">
-                        <div class="timeSelectionLabel">Start time:</div>
-                        <select onchange="validateMinutes(this.id, 'startMinutes'); timeChanged(this)" id="startHour" class="timeSelect">
-                            <option value="00" selected>00</option>
-                            <option value="01">01</option>
-                            <option value="02">02</option>
-                            <option value="03">03</option>
-                            <option value="04">04</option>
-                            <option value="05">05</option>
-                            <option value="06">06</option>
-                            <option value="07">07</option>
-                            <option value="08">08</option>
-                            <option value="9">09</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                        </select>
-                        <span class="timeBreak">:</span>
-                        <select onchange="timeChanged(this)" id="startMinutes" class="timeSelect">
-                            <option value="00" selected>00</option>
-                            <option value="15">15</option>
-                            <option value="30">30</option>
-                            <option value="45">45</option>
-                        </select>
-                    </div>
-                    <div class="timeSelectionHolder">
-                        <div class="timeSelectionLabel">End time:</div>
-                        <select onchange="validateMinutes(this.id, 'endMinutes'); timeChanged(this)" id="endHour" class="timeSelect">
-                            <option value="00">00</option>
-                            <option value="01">01</option>
-                            <option value="02">02</option>
-                            <option value="03">03</option>
-                            <option value="04">04</option>
-                            <option value="05">05</option>
-                            <option value="06">06</option>
-                            <option value="07">07</option>
-                            <option value="08">08</option>
-                            <option value="9">09</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24" selected>24</option>
-                        </select>
-                        <span class="timeBreak">:</span>
-                        <select onchange="timeChanged(this)" id="endMinutes" class="timeSelect">
-                            <option value="00" selected>00</option>
-                            <option value="15" disabled>15</option>
-                            <option value="30" disabled>30</option>
-                            <option value="45" disabled>45</option>
-                        </select>
-                    </div>
-                    <div id="timeWarningMessage"></div>
-                    <p>There's data from about the 26th of March.</p>
-                </div>
                 <h3 id="APIheader">3. API calls.</h3>
                 <p class="leftp">There are currently three methods for the API. Click stops on the map above to see an example of them all.</p>
                 <p class="leftp">1. Get all stops currently in the database.</p>
@@ -657,20 +579,13 @@
                 startingOptions = {
                     "fromCode": getQueryVariable("fromCode"),
                     "toCode": getQueryVariable("toCode"),
-                    "dateString": getQueryVariable("dateString"),
-                    "startTime": getQueryVariable("startTime"),
-                    "endTime": getQueryVariable("endTime")
+                    "dateString": getQueryVariable("dateString")
                 }
-                startingOptionsUpdateTimesAndDate();
+                startingOptionsDate();
             }
         }
 
-        function startingOptionsUpdateTimesAndDate() {
-            startHour.value = startingOptions.startTime.split(":")[0];
-            startMinutes.value = startingOptions.startTime.split(":")[1];
-            endHour.value = startingOptions.endTime.split(":")[0];
-            endMinutes.value = startingOptions.endTime.split(":")[1];
-
+        function startingOptionsDate() {
             startPicker.setDate(moment(startingOptions.dateString, "YYYY-MM-DD").toDate());
         }
 
@@ -696,11 +611,6 @@
         }
 
         function updateUrlState(queryString) {
-            if (validateTimes() == true) {
-                var startTimeThreshold = startHour.value + ":" + startMinutes.value;
-                var endTimeThreshold = endHour.value + ":" + endMinutes.value;
-                queryString += "&startTime=" + startTimeThreshold + "&endTime=" + endTimeThreshold;
-            }
             window.history.replaceState('newjourney', 'journeyedit', '?options=true&' + queryString);
         }
 
@@ -985,67 +895,6 @@
             updateStartDate();
         }
 
-        function resetTimeControls() {
-            startHour.value = "12";
-            startMinutes.value = "00";
-            endHour.value = "12";
-            endMinutes.value = "00";
-        }
-
-        function validateTimes() {
-            var startTime = startHour.value + ":" + startMinutes.value;
-            var startTimeMoment = moment(startTime, "HH:mm");
-
-            var endTime = endHour.value + ":" + endMinutes.value;
-            var endTimeMoment = moment(endTime, "HH:mm");
-
-            var validityCheck = startTimeMoment.isSameOrBefore(endTimeMoment);
-
-            return validityCheck;
-        }
-
-        // 12 m 20 o
-        function timeChanged(element) {
-            var validityCheck = validateTimes();
-
-            if (validityCheck == false) {
-                if (element.id.indexOf("start") > -1) {
-                    var warning = "The start time cannot be after the end time.";
-
-                } else {
-                    var warning = "The end time cannot be before the start time.";
-                }
-
-                timeWarningMessage.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' + warning;
-                timeWarningMessage.style.display = "block";
-            } else {
-                timeWarningMessage.style.display = "none";
-                if (journeyTimeData != undefined) {
-                    journeyDataLoaded();
-                }
-                addTimesToUrl();
-            }
-
-        }
-
-        function validateMinutes(hoursID, minutesID) {
-            var hoursElement = document.getElementById(hoursID);
-            var minutesElement = document.getElementById(minutesID);
-            var minutesOptions = minutesElement.getElementsByTagName("option");
-            if (hoursElement.value == "24") {
-                minutesElement.value = "00";
-                for (var i = 0; i < minutesOptions.length; i++) {
-                    if (minutesElement[i].value != "00") {
-                        minutesElement[i].disabled = true;
-                    }
-                }
-            } else {
-                for (var i = 0; i < minutesOptions.length; i++) {
-                    minutesElement[i].disabled = false;
-                }
-            }
-        }
-
         function updateStartDate() {
             specialDateSelection.value = "null";
             startPicker.setStartRange(startDate);
@@ -1289,9 +1138,6 @@
 
         function processWorstOrRealJourneyTimeData(type, worstOrRealJourneyTimes) {
 
-            var startTimeThreshold = moment(startHour.value + ":" + startMinutes.value, "HH:mm");
-            var endTimeThreshold = moment(endHour.value + ":" + endMinutes.value, "HH:mm");
-
             worstOrRealJourneyTimeHeading.innerHTML = type + " journey time by time of day.";
             worstOrRealJourneyTimesObject = {
                 "time": [],
@@ -1300,17 +1146,14 @@
             }
 
             for (var i = 0; i < worstOrRealJourneyTimes.length; i++) {
-                var startTime = (type == "Worst") ? moment(worstOrRealJourneyTimes[i]["StartTime"]).format("HH:mm") : worstOrRealJourneyTimes[i]["StartTime"];
-                var startTimeMoment = moment(startTime, "HH:mm");
-                if (startTimeMoment.isSameOrAfter(startTimeThreshold) && startTimeMoment.isSameOrBefore(endTimeThreshold)) {
-                    if (type == "Real") {
-                        worstOrRealJourneyTimesObject["time"].push(moment(worstOrRealJourneyTimes[i]["StartTime"], "HH:mm:ss").format("HH:mm"));
-                    } else {
-                        worstOrRealJourneyTimesObject["time"].push(moment(worstOrRealJourneyTimes[i]["StartTime"]).format("HH:mm"));
-                    }
-                    worstOrRealJourneyTimesObject["journeyTime"].push(formatJourneyTime(worstOrRealJourneyTimes[i]["JourneyTime"]));
-                    worstOrRealJourneyTimesObject["scheduledTime"].push(formatJourneyTime(worstOrRealJourneyTimes[i]["ScheduledTime"]));
+  
+                if (type == "Real") {
+                    worstOrRealJourneyTimesObject["time"].push(moment(worstOrRealJourneyTimes[i]["StartTime"], "HH:mm:ss").format("HH:mm"));
+                } else {
+                    worstOrRealJourneyTimesObject["time"].push(moment(worstOrRealJourneyTimes[i]["StartTime"]).format("HH:mm"));
                 }
+                worstOrRealJourneyTimesObject["journeyTime"].push(formatJourneyTime(worstOrRealJourneyTimes[i]["JourneyTime"]));
+                worstOrRealJourneyTimesObject["scheduledTime"].push(formatJourneyTime(worstOrRealJourneyTimes[i]["ScheduledTime"]));
             }
             plotWorstOrRealJourneyTimesChart(type, worstOrRealJourneyTimesObject);
 
@@ -1473,24 +1316,17 @@
             realJourneyTimesTitle.innerHTML = "Real journey times (mins)<br><span class='stopExplanation'>Stop " + fromCode + " to " + toCode + "</span>";
             timetabledJourneyTimesTitle.innerHTML = "Timetabled journey times (mins)<br><span class='stopExplanation'>Stop " + fromCode + " to " + toCode + "</span>";
 
-            var startTimeThreshold = moment(startHour.value + ":" + startMinutes.value, "HH:mm");
-            var endTimeThreshold = moment(endHour.value + ":" + endMinutes.value, "HH:mm");
-
             realJourneyTimesArray = [];
             timetabledJourneyTimesArray = [];
             for (var i = 0; i < journeyTimes.length; i++) {
-                var scheduledDeparture = moment(journeyTimes[i].ScheduledDepartureTime).format("HH:mm");
-                var scheduledDepartureMoment = moment(scheduledDeparture, "HH:mm");
-                if (scheduledDepartureMoment.isSameOrAfter(startTimeThreshold) && scheduledDepartureMoment.isSameOrBefore(endTimeThreshold)) {
-                    var realJourneyTime = Number(moment.duration(journeyTimes[i]["RealJourneyTime"].replace("-", "")).asMinutes().toFixed(0));
-                    if (realJourneyTime > 0 && realJourneyTime <= 120) {
-                        realJourneyTimesArray.push(realJourneyTime);
-                    }
+                var realJourneyTime = Number(moment.duration(journeyTimes[i]["RealJourneyTime"].replace("-", "")).asMinutes().toFixed(0));
+                if (realJourneyTime > 0 && realJourneyTime <= 120) {
+                    realJourneyTimesArray.push(realJourneyTime);
+                }
 
-                    var timetabledJourneyTime = Number(moment.duration(journeyTimes[i]["ScheduledJourneyTime"].replace("-", "")).asMinutes().toFixed(0));
-                    if (timetabledJourneyTime > 0 && realJourneyTime <= 120) {
-                        timetabledJourneyTimesArray.push(timetabledJourneyTime);
-                    }
+                var timetabledJourneyTime = Number(moment.duration(journeyTimes[i]["ScheduledJourneyTime"].replace("-", "")).asMinutes().toFixed(0));
+                if (timetabledJourneyTime > 0 && realJourneyTime <= 120) {
+                    timetabledJourneyTimesArray.push(timetabledJourneyTime);
                 }
             }
 
@@ -1600,9 +1436,6 @@
             var chart = new google.visualization.Timeline(container);
             var dataTable = new google.visualization.DataTable();
 
-            var startTimeThreshold = moment(startHour.value + ":" + startMinutes.value, "HH:mm");
-            var endTimeThreshold = moment(endHour.value + ":" + endMinutes.value, "HH:mm");
-
             dataTable.addColumn({
                 type: 'string',
                 id: 'Bus'
@@ -1618,23 +1451,20 @@
 
             for (var i = 0; i < busJourneys.length; i++) {
                 if (busJourneys[i].RealJourneyTime != null && moment.duration(busJourneys[i].RealJourneyTime.replace("-", "")) > 0) {
-                    var scheduledDeparture = moment(busJourneys[i].ScheduledDepartureTime).format("HH:mm");
-                    var scheduledDepartureMoment = moment(scheduledDeparture, "HH:mm");
-                    if (scheduledDepartureMoment.isSameOrAfter(startTimeThreshold) && scheduledDepartureMoment.isSameOrBefore(endTimeThreshold)) {
-                        var start = moment(busJourneys[i].RealDepartureTime);
-                        var end = moment(busJourneys[i].RealDepartureTime).add(moment.duration(busJourneys[i].RealJourneyTime.replace("-", "")));
-                        if (moment.duration(busJourneys[i].RealJourneyTime.replace("-", "")).asMinutes() <= 120) {
-                            // Journey time spans two days
-                            if (end.date() != start.date()) {
-                                var day = 1;
-                            } else {
-                                var day = 0;
-                            }
 
-                            dataTable.addRows([
-                                [busJourneys[i].UniqueID, new Date(0, 0, 0, start.hours(), start.minutes(), start.seconds()), new Date(0, 0, day, end.hours(), end.minutes(), end.seconds())],
-                            ]);
+                    var start = moment(busJourneys[i].RealDepartureTime);
+                    var end = moment(busJourneys[i].RealDepartureTime).add(moment.duration(busJourneys[i].RealJourneyTime.replace("-", "")));
+                    if (moment.duration(busJourneys[i].RealJourneyTime.replace("-", "")).asMinutes() <= 120) {
+                        // Journey time spans two days
+                        if (end.date() != start.date()) {
+                            var day = 1;
+                        } else {
+                            var day = 0;
                         }
+
+                        dataTable.addRows([
+                            [busJourneys[i].UniqueID, new Date(0, 0, 0, start.hours(), start.minutes(), start.seconds()), new Date(0, 0, day, end.hours(), end.minutes(), end.seconds())],
+                        ]);
                     }
 
                 }
