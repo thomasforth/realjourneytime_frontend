@@ -439,7 +439,7 @@
                     <span id="pickABusStopText">1. Pick a bus stop.</span><span id="spinner1" class="rightaligned"><span id="spinner1text" class="spinnertext"></span><img class="spinner" src="Spinner-3s-200px.svg" /></span>
                 </h3>
                 <div id="map"></div>
-                <h3>2. Pick a date and time</h3>
+                <h3>2. Pick a date</h3>
 
                 <div id="dateRangeHolder" class="controls">
                     <div class="dateRangeElement">
@@ -568,6 +568,8 @@
         function onYearSelectChange(element) {
             year = element.value;
             startPicker.setDate(`${year}-06-01`);
+            startPicker.setMinDate(moment(`${year}-01-01`, "YYYY-MM-DD").toDate());
+            startPicker.setMaxDate(moment(`${year}-12-31`, "YYYY-MM-DD").toDate());
             resetMap();
             element.blur();
         }
